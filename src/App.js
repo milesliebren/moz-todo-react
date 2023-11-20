@@ -7,6 +7,18 @@ import { nanoid } from "nanoid";
 function App(props) {
 
   const [tasks, setTasks] = useState(props.tasks);
+
+  const taskList = tasks.map((task) => (
+    <Todo
+      id={task.id}
+      name={task.name}
+      completed={task.completed}
+      key={task.id}
+      toggleTaskCompleted={toggleTaskCompleted}
+      deleteTask={deleteTask}
+    />
+  ));
+  
   const tasksNoun = taskList.length !== 1 ? "tasks" : "task";
   const headingText = `${taskList.length} ${tasksNoun} remaining`;
 
@@ -33,16 +45,7 @@ function App(props) {
     setTasks([...tasks, newTask]);
   }
 
-  const taskList = tasks.map((task) => (
-    <Todo
-      id={task.id}
-      name={task.name}
-      completed={task.completed}
-      key={task.id}
-      toggleTaskCompleted={toggleTaskCompleted}
-      deleteTask={deleteTask}
-    />
-  ));
+  
 
   return (
     <div className="todoapp stack-large">
