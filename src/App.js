@@ -1,8 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Form from "./components/Form";
 import FilterButton from "./components/FilterButton";
 import Todo from "./components/Todo";
 import { nanoid } from "nanoid";
+
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
 
 const FILTER_MAP = {
   All: () => true,
@@ -17,6 +25,8 @@ function App(props) {
 
   const [tasks, setTasks] = useState(props.tasks);
   const [filter, setFilter] = useState("All");
+  const prevTaskLength = usePrevious(tasks.length);
+  const listHeadingRef = useRef(null);
 
   const taskList = tasks
   .filter(FILTER_MAP[filter])
@@ -80,6 +90,17 @@ function App(props) {
   }
 
   
+  <h2 id="list-heading" tabIndex="-1" ref={listHeadingRef}>
+    {headingText}
+  </h2>
+
+  useEffect(() => {
+    if (tasks.length - prevTaskLength === -1) {
+      listHeadingRef.current.focus();
+    }
+  }, [tasks.length, prevTaskLength]);
+
+
 
   return (
     <div className="todoapp stack-large">
